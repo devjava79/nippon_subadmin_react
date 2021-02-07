@@ -1,25 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import Header from './component/nipponheader/Header';
+import Footer from "./component/nipponfooter/Footer";
+import Home from "./component/kycmanagement/Home";
+import Install_certificate from "./component/kycmanagement/Install_certificate";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div id="main">
+      <Header />
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Home}></Route>
+          <Route exact path="/install_certificate" component={Install_certificate}></Route>
+        </Switch>
+      </Router>
+      <Footer />
     </div>
   );
 }
+
 
 export default App;

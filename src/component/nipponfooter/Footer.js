@@ -1,0 +1,19 @@
+import  "./footer.css";
+function Footer() {
+    return (
+            <footer className="fixed-footer">
+                <div>
+                    <a href="#">Nippon Audiotronix </a>
+                    <span>&copy; 2021 creativeLabs.</span>
+                </div>
+                <div className="ml-auto">
+                    <span>Powered by </span>
+                    <a href="#">Nippon</a>
+                </div>
+            </footer>
+    );
+}
+
+
+
+export default Footer;
