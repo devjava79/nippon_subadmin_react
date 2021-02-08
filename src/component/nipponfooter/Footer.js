@@ -4,7 +4,7 @@ function Footer() {
             <footer className="fixed-footer">
                 <div>
                     <a href="#">Nippon Audiotronix </a>
-                    <span>&copy; 2021 creativeLabs.</span>
+                    <span>&copy; 2021.</span>
                 </div>
                 <div className="ml-auto">
                     <span>Powered by </span>

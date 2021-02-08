@@ -8,7 +8,8 @@ import {
 import Header from './component/nipponheader/Header';
 import Footer from "./component/nipponfooter/Footer";
 import Home from "./component/kycmanagement/Home";
-import Install_certificate from "./component/kycmanagement/Install_certificate";
+import Print_Options from "./component/kycmanagement/Print_Options";
+import Print_Details from './component/kycmanagement/Print_Details';
 
 function App() {
   return (
@@ -17,7 +18,9 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Home}></Route>
-          <Route exact path="/install_certificate" component={Install_certificate}></Route>
+          <Route exact path="/print_options" component={Print_Options}></Route>
+          <Route exact path="/print_details" component={Print_Details}></Route>
+          
         </Switch>
       </Router>
       <Footer />
