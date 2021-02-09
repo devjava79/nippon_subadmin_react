@@ -10,8 +10,6 @@ class Print_Details extends React.Component {
         this.state = {
             imei_details: '',
             selected_copy: '',
-            urlData: '',
-            responseData: ''
         };
         this.handleChange = this.handleChange.bind(this);
         this.submitKycDetails = this.submitKycDetails.bind(this);
@@ -26,33 +24,10 @@ class Print_Details extends React.Component {
     }
     submitKycDetails(e) {
         e.preventDefault();
-       
-        fetch("http://192.168.10.94:8080/generateCertificate",{
-            method: "POST",
-            body: JSON.stringify({
-                imeiNo: this.state.imei_details,
-                copyType: this.state.selected_copy
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
-        .then((response) => {
-            if (response.ok) {
-              return response.json();
-            } else {
-              throw new Error('Something went wrong');
-            }
-          })
-          .then((responseJson) => {
-            console.log(responseJson)
-            this.setState({
-                responseData : responseJson
-            });
-          })
-          .catch((error) => {
-            console.log(error)
-          });
+          this.props.history.push({
+              pathname: '/certificate',
+              state: {"imeiNo":this.state.imei_details,"selected_copy":this.state.selected_copy}
+            })
     }
 
     render() {
