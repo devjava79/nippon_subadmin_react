@@ -1,14 +1,8 @@
-table					/* table css*/
-{
-	width:"100%";
-	align-content:"center";
-}
 table td,
 table th{
 	width:auto;
-	border:#f5f5f5 solid 2px;
 	white-space:nowrap;
-	font-size:12px;
+	font-size:18px;
 }
 .jumbotron{
 	padding: 2rem 1rem !important;

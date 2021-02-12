@@ -2,6 +2,7 @@ import React from "react";
 import "./certificate.css";
 import $ from "jquery"
 import Spinner from 'react-bootstrap/Spinner'
+import Table from 'react-bootstrap/Table'
 
 class Certificate extends React.Component {
     _isMounted = false;
@@ -20,16 +21,47 @@ class Certificate extends React.Component {
         //this.handleChange = this.handleChange.bind(this);
     }
     componentDidMount() {
-        console.log(this.props.location.state)
         this._isMounted = true;
         this.state.imei_details = this.props.location.state.imeiNo
         this.state.selected_copy = this.props.location.state.selected_copy
         $("#navbar").addClass("d-none");
         $("#footer").addClass("d-none");
         this.getCertificateData()
+
     }
+    generateQrCode() {
+        var qrcode = new window.QRCode(document.getElementById("qrcode"), {
+            width: 150,
+            height: 100
+        });
+
+        function makeCode() {
+            var elText = document.getElementById("text");
+
+            if (!elText.value) {
+                alert("Input a text");
+                elText.focus();
+                return;
+            }
+
+            qrcode.makeCode(elText.value);
+        }
+
+        makeCode();
+
+        $("#text").
+            on("blur", function () {
+                makeCode();
+            }).
+            on("keydown", function (e) {
+                if (e.keyCode == 13) {
+                    makeCode();
+                }
+            });
+    }
+
     getCertificateData() {
-        fetch("http://192.168.10.94:8080/generateCertificate", {
+        fetch("http://localhost:8080/generateRenewalCertificate", {
             method: "POST",
             body: JSON.stringify({
                 imeiNo: this.state.imei_details,
@@ -56,13 +88,20 @@ class Certificate extends React.Component {
                         vehicleDetails: responseJson.vehicleDetails,
                         deviceDetails: responseJson.deviceDetails
                     });
+                    this.generateQrCode()
                 }
             })
             .catch((error) => {
-                console.log(error)
                 this.props.history.push('/print_details')
+                console.log(error)
             });
     }
+    print_certifcateCmd(event) {
+        event.preventDefault();
+        $("#printBt").addClass("d-none");
+        window.print()
+    }
+
     componentWillUnmount() {
         this._isMounted = false;
         $("#navbar").removeClass("d-none");
@@ -70,107 +109,125 @@ class Certificate extends React.Component {
     }
     render() {
         return (
-            <div>
+            <div className="ml-2 mr-2 " style={{ border: "2px solid" }}>
+                <a id="printBt" onClick={this.print_certifcateCmd} href="#" >Print as Pdf</a>
                 <div className="jumbotron" >
                     <div className="row text-center" style={{ width: "100%", padding: "0px" }}>
                         <div className="col-sm-10 text-left">
                             <img src="./images/nippon_logo_sample.jpg" className="imgstyle" style={{ height: "60px" }} />
-                            <p style={{ fontSize: "9px" }}>
-                                NIPPON AUDIOTRONIX PVT LTD<br />
-                                D-7,Sector-10,Noida-201301 U.P(INDIA),&nsp; <br />
-                                Tel:+91-120-2555555,4266100,&nsp; Fax:+91-120-2527967<br />
-                                Email:info@nipponaudio.com,&nsp; sales@nipponaudio.com,&nsp; sevice@@nipponaudio.com<br />
-                                CINNO.:U74899DL1987PTC027312
+                            <p style={{ fontSize: "13px" }}>
+                                <b>NIPPON AUDIOTRONIX PVT LTD</b><br />
+                                D-7,Sector-10,Noida-201301 U.P(INDIA) <br />
+                                CINNO.:U74899DL1987PTC027312<br />
+                                <b>GST NO</b>: _________________________<br />
+                                <b>Help Line no</b>:1800 120 6532<br />
+                                <b>Email</b>:customercare@nipponaudio.com
 			                 </p>
                         </div>
 
 
                         <div className="col-sm-2 text-right">
                             <div>
-
-
                                 <img alt="Not found" src="./images/NAPLSECURAHORIZONTAL.png"
-                                    style={{ marginTop: "10px", height: "60px" }}></img>
-                                <br /><br />
-                                <center>
-                                    <img src="./images/qr.png" alt="Scan me"></img>
+                                    style={{ marginTop: "10px", width: "100%" }}></img>
+                                <br ></br>
+                                <center style={{ marginTop: "4px" }}>
+                                    <div id="qrcode"></div>
                                 </center>
+                                <input id="text" type="hidden" onChange={this.handleChange} value={"http://localhost:3000/showQrdetails?token=" + this.state.responseData.token} style={{ width: "80%" }} /><br></br>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div className="container-fluid bg-3">
-                    <div className="row">
-                        <div className="col-sm-4"><h6>Certificate Sl.No:&nbsp;{this.state.responseData.cert_serial_no}<br /></h6></div>
-                        <div className="col-sm-4 text-center"><h5><u>{this.state.selected_copy}</u></h5></div>
-                        <div className="col-sm-4 text-right"><h6>ISSUE DATE:&nbsp;&nbsp;{this.state.responseData.validityDetails.renewalDate}</h6></div>
-
-                    </div>
+                    <h3 className="text-center">{this.state.selected_copy}</h3>
                     <br />
+
+
+                    <table cellSpacing="0" cellPadding="0" style={{ border: "0", width: "100%" }}>
+
+                        <tbody>
+                            <tr>
+                                <th>Tac Reg.No/COP No</th><td><span>{this.state.responseData.validityDetails.tacRegNo}</span> <span>/ CC0GO 8020</span></td><th></th><th>SIM Renewed On</th><td>11-02-2020</td>
+                            </tr>
+                            <tr>
+                                <th>Device Fitment Date:</th><td>{this.state.responseData.vehicleDetails.fitment_date}</td><th></th><th>SIM Renewal Date</th><td>{this.state.responseData.validityDetails.renewalDate}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <br />
+
                     <div className="row">
-                        <div className="text-center">
-                            <h5>AIS 140 COMPLIANT VLT INSTALLATION CERTIFICATE</h5>
+                        <div className="container text-center">
+                            <h3>AIS-140 COMPLIANT VLT e-SIM/SERVICE RENEWAL CERTIFICATE</h3>
                         </div>
                     </div>
                     <br />
-                    <div className="row" >
-                        <table style={{ border: "0", align: "center", width: "100%" }}>
+                    <div className="row ml-1" >
+                        <table cellSpacing="0" cellPadding="0" style={{ border: "0", width: "100%" }}>
 
                             <tbody>
                                 <tr>
-                                    <th colSpan="1">Vehicle Details</th><td></td><th>Device Details</th><td>&nbsp;</td><th>Validity Details</th><td>&nbsp;</td>
+                                    <th>Certificate NO:</th><td>{this.state.responseData.cert_serial_no}</td><th></th><th>Device Model No</th><td>{this.state.responseData.deviceDetails.device_model}</td>
                                 </tr>
                                 <tr>
-                                    <th>Vahaan ID:</th><td>{this.state.responseData.vehicleDetails.vahaan_id}</td><th>Device Model</th><td>{this.state.responseData.deviceDetails.device_model}</td><th> TAC Validity</th><td>{this.state.responseData.validityDetails.tacValidity}</td>
+                                    <th>Chassis No</th><td>{this.state.responseData.vehicleDetails.chassis_no}</td><th></th><th> GNSS Module</th><td>{this.state.responseData.deviceDetails.gps_make}</td>
                                 </tr>
                                 <tr>
-                                    <th>Chassis No</th><td>{this.state.responseData.vehicleDetails.chassis_no}</td><th> Device IMEI No</th><td>{this.state.responseData.deviceDetails.device_imei_no}</td><th>COP Validity</th><td>{this.state.responseData.validityDetails.copValidity}</td>
+                                    <th>Engine No</th><td>{this.state.responseData.vehicleDetails.engine_no}</td><th></th><th>VAHAN ID</th><td>{this.state.responseData.vehicleDetails.vahaan_id}</td>
                                 </tr>
                                 <tr>
-                                    <th>Engine No</th><td>{this.state.responseData.vehicleDetails.engine_no}</td><th>ICCID</th><td>{this.state.responseData.deviceDetails.iccid}</td><th>Fitment Validity</th><td>{this.state.responseData.validityDetails.fitmentValidity}</td>
+                                    <th>Vehicle OEM</th><td>{this.state.responseData.vehicleDetails.vehicleOem}</td><th></th><th>Device IMEI</th><td>{this.state.imei_details}</td>
                                 </tr>
                                 <tr>
-                                    <th>Fitment Date</th><td>{this.state.responseData.vehicleDetails.fitment_date}</td><th>GSM Make</th><td>{this.state.responseData.deviceDetails.gsm_make}</td><th> Primary SIM & Validity</th><td>{this.state.responseData.validityDetails.primarySimValidity}</td>
+                                    <th>Vehicle Model</th><td>{this.state.responseData.vehicleDetails.vehicleType}</td><th></th><th>GSM Module </th><td>{this.state.responseData.deviceDetails.gsm_make}</td>
                                 </tr>
                                 <tr>
-                                    <th>Dealer Name</th><td>{this.state.responseData.vehicleDetails.dealer_name}</td><th>GPS Make </th><td>{this.state.responseData.deviceDetails.gps_make}</td><th> Secondary SIM & Validity</th><td>{this.state.responseData.validityDetails.secondarySimValidity}</td>
+                                    <th>Vehicle Reg/Temp No:</th><td>{this.state.responseData.vehicleDetails.regNo}</td><th></th><th>ICCID</th><td>{this.state.responseData.deviceDetails.iccid}</td>
                                 </tr>
                                 <tr>
-                                    <th>Reg No:</th><td>{this.state.responseData.vehicleDetails.regNo}</td><th>Panic Button Make & Model</th><td>{this.state.responseData.deviceDetails.panic_button_make}</td><th> Service Validity</th><td>{this.state.responseData.validityDetails.serviceValidity} Year from date of Installation</td>
+                                    <th>Voltage</th><td>{this.state.responseData.deviceDetails.ops_voltage}</td><th></th><th>Primary SIM </th><td>{this.state.responseData.validityDetails.primarySim}</td>
                                 </tr>
                                 <tr>
-                                    <th>Switches</th><td>{this.state.responseData.vehicleDetails.switches}</td><th>Ops Voltage </th><td>{this.state.responseData.deviceDetails.ops_voltage}</td><th> Renewal Date</th><td> {this.state.responseData.validityDetails.renewalDate}</td>
+                                    <th>Panic Button Model</th><td>{this.state.responseData.deviceDetails.panic_button_make}</td><th></th><th>Secondary SIM </th><td>{this.state.responseData.validityDetails.secondarySim}</td>
+                                </tr>
+                                <tr>
+                                    <th>Panic Button fitted</th><td>{this.state.responseData.vehicleDetails.switches}</td>
+                                </tr>
+                                <tr>
+                                    <th>Device Inspected By</th><td>Nippon Audiotronix Pvt. Ltd</td>
                                 </tr>
                             </tbody>
 
-                        </table>
+                        </table >
                     </div>
                 </div><br />
 
                 <div className="container-fluid bg-3 text-center">
                     <div className="row">
 
-                        <div className="col-sm-4">
-                            <img src={this.state.responseData.fitment_image1} alt="No image found" />
+                        <div className="col-sm-3  offset-sm-1 border border-dark">
+                            <img src="./images/Capture.png" alt="" style={{ width: "100%", height: "180px " }} />
                         </div>
 
-                        <div className="col-sm-4">
-                            <img src={this.state.responseData.fitment_image2} alt="No image found" />
+                        <div className="col-sm-3 ml-3 border border-dark">
+                            <img src="./images/Capture.png" alt="" style={{ width: "100%", height: "180px ", marginLeft: "10px" }} />
                         </div>
 
-                        <div className="col-sm-4">
-                            <img src={this.state.responseData.fitment_image3} alt="No image found" />
+
+                        <div className="col-sm-3 ml-3 border border-dark">
+                            <img src="./images/Capture.png" alt="" style={{ width: "100%", height: "180px ", marginLeft: "10px" }} />
                         </div>
 
                     </div>
                 </div><br /><br />
 
                 <footer className="container-fluid text-left">
-                    <h6>This is certify that,AIS 140 compliant vehicle Location Tracking device with Panic button
-                    (SOS) has been installed properly and found to be working fine in all manners at the time of
-	   installation.</h6>
-                    <h6>As per AIS 140 guideline device has been configured with State approved server.</h6>
+                    <h6>This is certify that,AIS 140 compliant vehicle Location Tracking device
+                    Services (SIM) has been renewed and Fitted device is
+                        working fine in all manner .</h6>
                     <div className="row">
                         <br />
                         <div className="col-sm-10" align="left">
@@ -186,18 +243,26 @@ class Certificate extends React.Component {
                     </div>
                     <br />
                     <div align="left">
-                        <h6>&nbsp;&nbsp;&nbsp;&nbsp;I confirm that the device &amp; Panic Button (SOS) installation has been carried out to my
+                        <h6>I confirm that the device &amp; Panic Button (SOS) installation has been carried out to my
                         statisfaction and explained about the functionality of Device. I undertake that i will not tamper
 			   the device &amp; Panic Button (SOS.)</h6>
                     </div>
                     <br />
                     <br />
-                    <div className="row">
-                        <div className="col-sm-8"> <h5>Signature of Owner/Representative</h5></div>
-                        <div className="col-sm-4 text-right"> <h6>NAME:&nbsp;&nbsp;{this.state.responseData.name}</h6>
-                            <h6>CONTACT/LOGIN ID:&nbsp;&nbsp;{this.state.responseData.contact}</h6>
-
-                            <br />
+                    <div className="row" style={{ fontSize: "18px" }}>
+                        <div className="col-md-4" style={{ display: "inline-block" }}>
+                            <b style={{ float: "left" }}>Customer Name:</b><p style={{ float: "right" }}>{this.state.responseData.name}</p>
+                        </div>
+                        <div className="col-md-4 offset-md-4" style={{ display: "inline-block" }}>
+                            <b style={{ float: "left" }}>Contact/ Login ID:</b><p style={{ float: "right" }}>{this.state.responseData.primaryContact}</p>
+                        </div>
+                    </div>
+                    <div className="row" style={{ fontSize: "18px" }}>
+                        <div className="col-md-4" style={{ display: "inline-block" }}>
+                            <b style={{ float: "left" }}>Customer Address:</b><p style={{ float: "right" }}>{this.state.responseData.address}</p>
+                        </div>
+                        <div className="col-md-4 offset-md-4" style={{ display: "inline-block" }}>
+                            <b style={{ float: "left" }}>Customer Signature:</b><p style={{ float: "right" }}></p>
                         </div>
                     </div></footer>
             </div>

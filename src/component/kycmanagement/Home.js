@@ -8,7 +8,7 @@ function Home() {
                 <Card.Img variant="top" src="./images/print .png" style={{ width: "50%",marginLeft:"25%" }} />
                 <Card.Body>
                     <Card.Title >Certificate</Card.Title>
-                    <Link to="/print_options"><Button variant="primary">Installation Certificate</Button></Link>
+                    <Link to="/print_options"><Button variant="primary">Renewal Certificate</Button></Link>
                 </Card.Body>
             </Card>
         </div>

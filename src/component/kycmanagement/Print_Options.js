@@ -10,8 +10,8 @@ function Install_Certificate(params) {
                 <Card style={{ width: '18rem' }} className="text-center">
                     <Card.Img variant="top" src="./images/certificate.png" style={{ width: "50%",marginLeft:"25%" }} />
                     <Card.Body>
-                        <Card.Title >Certificate</Card.Title>
-                        <Link to = "/print_details"><Button variant="primary">Generate Certificate</Button></Link>
+                        <Card.Title >Renewal Certificate</Card.Title>
+                        <Link to = "/print_details"><Button variant="primary">Generate Renewal Certificate</Button></Link>
                     </Card.Body>
                 </Card>
             </div>

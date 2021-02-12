@@ -37,7 +37,7 @@ class Print_Details extends React.Component {
                 <Form onSubmit={this.submitKycDetails} method="post">
                     <Form.Group controlId="exampleInputEmail1" >
                         <Form.Label>IMEI of Device</Form.Label>
-                        <Form.Control type="text" placeholder="" value = {this.state.imei_details} onChange = {this.handleChange} name="imei_details" pattern="[0-9]{15}" maxLength="15" required="required" autoFocus="autofocus" />
+                        <Form.Control type="text" placeholder="" autoComplete="autoComplete" value = {this.state.imei_details} onChange = {this.handleChange} name="imei_details" pattern="[0-9]{15}" maxLength="15" required="required" autoFocus="autofocus" />
                     </Form.Group>
                     <Form.Group controlId="exampleFormControlSelect1">
                         <Form.Label>Select Copy Type</Form.Label>
