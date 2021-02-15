@@ -66,7 +66,6 @@ class Certificate extends React.Component {
             method: "POST",
             body: JSON.stringify({
                 imeiNo: this.state.imei_details,
-                copyType: this.state.selected_copy
             }),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
@@ -143,8 +142,8 @@ class Certificate extends React.Component {
                                 <div>
                                     <img alt="Not found" src="./images/NAPLSECURAHORIZONTAL.png"
                                         style={{ marginTop: "10px", width: "100%" }}></img>
-                                    <br ></br>
-                                    <center style={{ marginTop: "4px" }}>
+                                    <br ></br><br></br>
+                                    <center>
                                         <div id="qrcode"></div>
                                     </center>
                                     <input id="text" type="hidden" onChange={this.handleChange} value={"http://localhost:3000/showQrdetails?token=" + this.state.responseData.token} style={{ width: "80%" }} /><br></br>
@@ -162,7 +161,7 @@ class Certificate extends React.Component {
 
                             <tbody>
                                 <tr>
-                                    <th>Tac Reg.No/COP No</th><td><span>{this.state.responseData.validityDetails.tacRegNo}</span> {this.state.responseData.validityDetails.copRegNo != null &&  <span>{"/ "+this.state.responseData.validityDetails.copRegNo}</span>} </td><th></th><th>SIM Renewed On</th><td>11-02-2020</td>
+                                    <th>TAC Reg.No/COP No</th><td><span>{this.state.responseData.validityDetails.tacRegNo}</span> {this.state.responseData.validityDetails.copRegNo != null &&  <span>{"/ "+this.state.responseData.validityDetails.copRegNo}</span>} </td><th></th><th>SIM Renewed On</th><td>11-02-2020</td>
                                 </tr>
                                 <tr>
                                     <th>Device Fitment Date:</th><td>{this.state.responseData.vehicleDetails.fitment_date}</td><th></th><th>SIM Renewal Date</th><td>{this.state.responseData.validityDetails.renewalDate}</td>
@@ -207,7 +206,7 @@ class Certificate extends React.Component {
                                         <th>Panic Button Model</th><td>{this.state.responseData.deviceDetails.panic_button_make}</td><th></th><th>Secondary SIM </th><td>{this.state.responseData.validityDetails.secondarySim}</td>
                                     </tr>
                                     <tr>
-                                        <th>Panic Button fitted</th><td>{this.state.responseData.vehicleDetails.switches}</td>
+                                        <th>Panic Buttons fitted</th><td>{this.state.responseData.vehicleDetails.switches}</td>
                                     </tr>
                                     <tr>
                                         <th>Device Inspected By</th><td>Nippon Audiotronix Pvt. Ltd</td>
