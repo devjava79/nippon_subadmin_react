@@ -7,7 +7,6 @@ function Header() {
                 <Navbar.Brand href="#">Nippon</Navbar.Brand>
                 <Nav className="mr-auto">
                     <Nav.Link href="/">Home</Nav.Link>
-                    <Nav.Link href="#features">Features</Nav.Link>
                 </Nav>
             </Navbar>
     );

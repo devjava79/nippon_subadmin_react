@@ -13,6 +13,7 @@ import Print_Details from './component/kycmanagement/Print_Details';
 import Certificate from './component/kycmanagement/Certificate';
 import React from "react";
 import ShowQrdetails from './component/kycmanagement/ShowQrDetails';
+import Kycdashboard from './component/kycmanagement/kycdashboard/KycDashboard';
 
 class App extends React.Component {
   constructor(props) {
@@ -29,6 +30,7 @@ class App extends React.Component {
           <Route exact path="/print_details" component={Print_Details}></Route>
           <Route exact path= "/certificate" component={Certificate}></Route>
           <Route exact path= "/showQrdetails" component={ShowQrdetails}></Route>
+          <Route exact path= "/kycdashboard" component={Kycdashboard}></Route>
         </Switch>
       </Router>
       <Footer />

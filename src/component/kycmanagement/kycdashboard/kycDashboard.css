@@ -1,0 +1,11 @@
+.table-responsive {
+    width: 100% !important;
+}
+
+.dataTables_paginate {
+    float: right !important;
+}
+
+.dataTables_info {
+    float: left !important;
+}
